@@ -18,10 +18,16 @@ namespace SalesManager.API.Controllers
         {
             _clientService = clientService;
         }
+
+        [HttpGet]
+        public async Task<IEnumerable<ClientDto>> GetAll()
+        {
+            return await _clientService.GetAllAsync();
+        }
         
         // GET: Clients/
-        [HttpGet]
-        public async Task<DataCollection<ClientDto>> Get(int page, int take = 10)
+        [HttpGet("{page}/{take}")]
+        public async Task<DataCollection<ClientDto>> GetPaging(int page, int take = 10)
         {
             return await _clientService.GetAllAsync(page, take);
         }

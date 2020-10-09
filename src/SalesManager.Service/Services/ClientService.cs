@@ -15,6 +15,7 @@ namespace SalesManager.Service.Services
 {
     public interface IClientService
     {
+        Task<IEnumerable<ClientDto>> GetAllAsync();
         Task<DataCollection<ClientDto>> GetAllAsync(int page, int take);
         Task<ClientDto> GetByIdAsync(int Id);
         Task<ClientDto> CreateAsync(ClientCreateDto model);
@@ -30,6 +31,11 @@ namespace SalesManager.Service.Services
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<ClientDto>> GetAllAsync()
+        {
+            return _mapper.Map<IEnumerable<ClientDto>>(await _context.Clients.ToListAsync());
         }
 
         public async Task<DataCollection<ClientDto>> GetAllAsync(int page, int take)
