@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
 
 namespace SalesManager.API
 {
@@ -34,6 +35,9 @@ namespace SalesManager.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddAutoMapper(typeof(Startup));
+            services.AddSwaggerGen(options => { options.SwaggerDoc("v1",
+                new OpenApiInfo { Title = "SalesManager v1", Version = "v1", Description = "Sales Manager API", 
+                    Contact = new OpenApiContact { Name = "Sales Manager Company", Email = "info@salesmanager.com", Url = new Uri("http://localhost:25464/") } }); });
             services.AddTransient<IClientService, ClientService>();
         }
 
@@ -44,6 +48,9 @@ namespace SalesManager.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sales Manager V1"); });
 
             app.UseRouting();
 

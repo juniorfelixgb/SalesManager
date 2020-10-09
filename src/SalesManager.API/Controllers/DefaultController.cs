@@ -12,7 +12,7 @@ namespace SalesManager.API.Controllers
     {
         public IActionResult Index()
         {
-            return Ok("Runing...");
+            return Content("Runing...");
         }
     }
 }

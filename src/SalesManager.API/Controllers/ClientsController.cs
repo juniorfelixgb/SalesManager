@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesManager.Domain.Dtos;
+using SalesManager.Service.Common;
 using SalesManager.Service.Services;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,9 @@ namespace SalesManager.API.Controllers
         
         // GET: Clients/
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<DataCollection<ClientDto>> Get(int page, int take = 10)
         {
-            var clients = await _clientService.GetAllAsync();
-            return Ok(clients);
+            return await _clientService.GetAllAsync(page, take);
         }
 
         // GET: Clients/1
@@ -38,7 +38,7 @@ namespace SalesManager.API.Controllers
         public async Task<IActionResult> Create(ClientCreateDto model)
         {
             var result = await _clientService.CreateAsync(model);
-            return CreatedAtAction("Get", new { Id = result.Id }, result);
+            return CreatedAtAction("Get", new { result.Id }, result);
         }
 
         [HttpPut("{Id}")]

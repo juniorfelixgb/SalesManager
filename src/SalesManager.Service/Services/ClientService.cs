@@ -3,16 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using SalesManager.Domain.Dtos;
 using SalesManager.Domain.Entities;
 using SalesManager.Persistence;
+using SalesManager.Service.Common;
+using SalesManager.Service.Extentions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SalesManager.Service.Services
 {
     public interface IClientService
     {
-        Task<IEnumerable<ClientDto>> GetAllAsync();
+        Task<DataCollection<ClientDto>> GetAllAsync(int page, int take);
         Task<ClientDto> GetByIdAsync(int Id);
         Task<ClientDto> CreateAsync(ClientCreateDto model);
         Task UpdateAsync(int Id, ClientUpdateDto model);
@@ -29,10 +32,13 @@ namespace SalesManager.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ClientDto>> GetAllAsync()
+        public async Task<DataCollection<ClientDto>> GetAllAsync(int page, int take)
         {
-            var clients = await _context.Clients.ToListAsync();
-            return _mapper.Map<IEnumerable<ClientDto>>(clients);
+            return _mapper.Map<DataCollection<ClientDto>>(
+                    await _context.Clients.OrderByDescending(c => c.Id)
+                                          .AsQueryable()
+                                          .PagedAsync(page, take)
+                );
         }
 
         public async Task<ClientDto> GetByIdAsync(int Id)
